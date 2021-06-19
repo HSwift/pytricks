@@ -25,7 +25,9 @@ if platform.python_implementation() == "CPython":
     import binascii
     import base64
     import re
-    import hashlib 
+    import hashlib
+    import datetime
+    import time
 
     def _str(x, encoding='utf-8'):
         return x.decode(encoding)
@@ -87,6 +89,14 @@ if platform.python_implementation() == "CPython":
 
     def _join(x, separator=''):
         return separator.join(x)
+    
+    def _date(x, format='%Y-%m-%d %H:%M:%S'):
+        time_struct = datetime.datetime.fromtimestamp(x)
+        return time_struct.strftime(format)
+    
+    def _time(x, format='%Y-%m-%d %H:%M:%S'):
+        time_struct = time.strptime(x, format)
+        return int(time.mktime(time_struct))
 
     def _nop(x):
         return x
@@ -123,6 +133,9 @@ if platform.python_implementation() == "CPython":
     forbiddenfruit.curse(list, "filter", _filter)
     forbiddenfruit.curse(list, "reduce", _reduce)
     forbiddenfruit.curse(list, "join", _join)
+    
+    forbiddenfruit.curse(int, "date", _date)
+    forbiddenfruit.curse(str, "time", _time)
 
 
 else:
