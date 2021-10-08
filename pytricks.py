@@ -28,6 +28,7 @@ if platform.python_implementation() == "CPython":
     import hashlib
     import datetime
     import time
+    import urllib.parse
 
     def _str(x, encoding='utf-8'):
         return x.decode(encoding)
@@ -100,7 +101,14 @@ if platform.python_implementation() == "CPython":
 
     def _nop(x):
         return x
-
+    
+    @toBytes
+    def _urlencode(x):
+        return urllib.parse.quote_plus(x)
+    
+    def _urldecode(x):
+        return urllib.parse.unquote_plus(x)
+    
     forbiddenfruit.curse(bytes, "str", _str)
     forbiddenfruit.curse(bytes, "bytes", _nop)
     forbiddenfruit.curse(str, "bytes", _bytes)
@@ -115,6 +123,10 @@ if platform.python_implementation() == "CPython":
     forbiddenfruit.curse(str, "unbase64", _unbase64)
     forbiddenfruit.curse(bytes, "base64", _base64)
     forbiddenfruit.curse(bytes, "unbase64", _unbase64)
+    
+    forbiddenfruit.curse(str, "urlencode", _urlencode)
+    forbiddenfruit.curse(str, "urldecode", _urldecode)
+    forbiddenfruit.curse(bytes, "urlencode", _urlencode)
 
     forbiddenfruit.curse(str, "findall", _findall)
     forbiddenfruit.curse(str, "len", _len)
