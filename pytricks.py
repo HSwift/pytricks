@@ -29,6 +29,7 @@ if platform.python_implementation() == "CPython":
     import datetime
     import time
     import urllib.parse
+    import struct
 
     def _str(x, encoding='utf-8'):
         return x.decode(encoding)
@@ -90,25 +91,29 @@ if platform.python_implementation() == "CPython":
 
     def _join(x, separator=''):
         return separator.join(x)
-    
+
     def _date(x, format='%Y-%m-%d %H:%M:%S'):
         time_struct = datetime.datetime.fromtimestamp(x)
         return time_struct.strftime(format)
-    
+
     def _time(x, format='%Y-%m-%d %H:%M:%S'):
         time_struct = time.strptime(x, format)
         return int(time.mktime(time_struct))
 
     def _nop(x):
         return x
-    
+
     @toBytes
     def _urlencode(x):
         return urllib.parse.quote_plus(x)
-    
+
     def _urldecode(x):
         return urllib.parse.unquote_plus(x)
-    
+
+    def _unpack(x, format):
+        return struct.unpack(format, x)
+
+
     forbiddenfruit.curse(bytes, "str", _str)
     forbiddenfruit.curse(bytes, "bytes", _nop)
     forbiddenfruit.curse(str, "bytes", _bytes)
@@ -123,7 +128,7 @@ if platform.python_implementation() == "CPython":
     forbiddenfruit.curse(str, "unbase64", _unbase64)
     forbiddenfruit.curse(bytes, "base64", _base64)
     forbiddenfruit.curse(bytes, "unbase64", _unbase64)
-    
+
     forbiddenfruit.curse(str, "urlencode", _urlencode)
     forbiddenfruit.curse(str, "urldecode", _urldecode)
     forbiddenfruit.curse(bytes, "urlencode", _urlencode)
@@ -140,12 +145,14 @@ if platform.python_implementation() == "CPython":
     forbiddenfruit.curse(bytes, "sha1", _sha1)
     forbiddenfruit.curse(bytes, "sha256", _sha256)
 
+    forbiddenfruit.curse(bytes, "unpack", _unpack)
+
     forbiddenfruit.curse(list, "len", _len)
     forbiddenfruit.curse(list, "map", _map)
     forbiddenfruit.curse(list, "filter", _filter)
     forbiddenfruit.curse(list, "reduce", _reduce)
     forbiddenfruit.curse(list, "join", _join)
-    
+
     forbiddenfruit.curse(int, "date", _date)
     forbiddenfruit.curse(str, "time", _time)
 
