@@ -30,6 +30,7 @@ if platform.python_implementation() == "CPython":
     import time
     import urllib.parse
     import struct
+    import json
 
     def _str(x, encoding='utf-8'):
         return x.decode(encoding)
@@ -113,6 +114,11 @@ if platform.python_implementation() == "CPython":
     def _unpack(x, format):
         return struct.unpack(format, x)
 
+    def _json(x):
+        return json.loads(x)
+
+    def _to_json(x):
+        return json.dumps(x)
 
     forbiddenfruit.curse(bytes, "str", _str)
     forbiddenfruit.curse(bytes, "bytes", _nop)
@@ -146,6 +152,11 @@ if platform.python_implementation() == "CPython":
     forbiddenfruit.curse(bytes, "sha256", _sha256)
 
     forbiddenfruit.curse(bytes, "unpack", _unpack)
+
+    forbiddenfruit.curse(bytes, "json", _json)
+    forbiddenfruit.curse(str, "json", _json)
+    forbiddenfruit.curse(dict, "to_json", _to_json)
+    forbiddenfruit.curse(list, "to_json", _to_json)
 
     forbiddenfruit.curse(list, "len", _len)
     forbiddenfruit.curse(list, "map", _map)
