@@ -22,7 +22,7 @@ Pytricks provides a number of handy extensions to python's built-in types. These
 | str,bytes | sha1 | `"123456".sha1() => "7c4a8d09ca3762af61e59520943dc26494f8941b"` |
 | str,bytes | sha256 | `"123456".sha256() =>  "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"` |
 | str,bytes,list | len(property) | `"123456".len => 6` |
-| str,bytes | __xor__ | `b"123" ^ b"456" => b"\x05\x07\x05"` |
+| str,bytes | \_\_xor\_\_ | `b"123" ^ b"456" => b"\x05\x07\x05"` |
 | list | map | `[1, 2, 3, 4].map(lambda x: x * 2) =>  [2, 4, 6, 8]` |
 | list | filter | `[1, 2, 3, 4].filter(lambda x: x % 2 == 0) => [2, 4]` |
 | list | reduce | `[1, 2, 3, 4].reduce(lambda x, y: x+y) => 10` |
@@ -31,7 +31,7 @@ Pytricks provides a number of handy extensions to python's built-in types. These
 | str | time | `"2009-02-14 07:31:30".time() => 1234567890` |
 | bytes | unpack | `b"\x00\x01".unpack(">h") => (1,)` |
 | str,bytes | json | `"[1,2]".json() => [1,2]` |
-| dict|list | to_json | `[1,2].to_json() => "[1, 2]"` |
+| dict,list | to_json | `[1,2].to_json() => "[1, 2]"` |
 
 # install
 
