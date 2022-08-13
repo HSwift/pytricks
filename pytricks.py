@@ -34,7 +34,7 @@ if platform.python_implementation() == "CPython":
     import struct
     import json
 
-    def _nop(x: any) -> any:
+    def _nop(x: any, *args) -> any:
         return x
 
     def _str(x: str | bytes, encoding: str = 'utf-8') -> str:
