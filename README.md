@@ -43,12 +43,13 @@ Pytricks provides a number of handy extensions to python's built-in types. These
 | list | filter | `[1, 2, 3, 4].filter(lambda x: x % 2 == 0) => [2, 4]` |
 | list | reduce | `[1, 2, 3, 4].reduce(lambda x, y: x+y) => 10` |
 | list | join | `[1, 2, 3, 4].join() => "1234"`|
-| int | date | `(1234567890).date =>  "2009-02-14 07:31:30"` | 
+| int | date | `(1234567890).date =>  "2009-02-14 07:31:30"` |
 | str | time | `"2009-02-14 07:31:30".time() => 1234567890` |
 | bytes | unpack | `b"\x00\x01".unpack(">h") => (1,)` |
 | str,bytes | json | `"[1,2]".json() => [1,2]` |
 | dict,list | to_json | `[1,2].to_json() => "[1, 2]"` |
-| str | clip* | `"abc".clip() # copy abc to clipboard` | 
+| str | clip* | `"abc".clip() # copy abc to clipboard` |
+| str | from_clip* | `"".from_clip() # get clipboard content` |
 
 
 note: pytricks only support **CPython**.  

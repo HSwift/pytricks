@@ -112,6 +112,16 @@ class TestPytricks(unittest.TestCase):
         except pyperclip.PyperclipException:
             pass
 
+    def test_pates_from_clip(self):
+        try:
+            import pyperclip
+            pyperclip.copy("abc")
+            self.assertEqual("".from_clip(), "abc")
+        except ModuleNotFoundError:
+            pass
+        except pyperclip.PyperclipException:
+            pass
+
     def test_ascii(self):
         self.assertEqual("abc".ascii(), [97, 98, 99])
         self.assertEqual(b"\x81\x82\x83".ascii(), [129, 130, 131])

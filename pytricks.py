@@ -209,6 +209,12 @@ if platform.python_implementation() == "CPython":
             pyperclip.copy(x)
 
         forbiddenfruit.curse(str, "clip", _copy_to_clip)
+
+        def _paste_from_clip(x: str) -> str:
+            return pyperclip.paste()
+
+        forbiddenfruit.curse(str, "from_clip", _paste_from_clip)
+
     except:
         pass
 
