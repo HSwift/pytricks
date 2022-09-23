@@ -46,10 +46,11 @@ Pytricks provides a number of handy extensions to python's built-in types. These
 | bytes | unpack | `b"\x00\x01".unpack(">h") => (1,)` |
 | str,bytes | json | `"[1,2]".json() => [1,2]` |
 | dict,list | to_json | `[1,2].to_json() => "[1, 2]"` |
+| str | clip* | `"abc".clip() # copy abc to clipboard` | 
 
 
-
-note: pytricks only support **CPython**.
+note: pytricks only support **CPython**.  
+*: pyperclip module required
 
 ## ipython integration
 

@@ -102,6 +102,15 @@ class TestPytricks(unittest.TestCase):
         self.assertEqual({"a": ["1", 2, 3]}.to_json(), '{"a": ["1", 2, 3]}')
         self.assertEqual(["1", 2, 3].to_json(), '["1", 2, 3]')
 
+    def test_copy_to_clip(self):
+        try:
+            import pyperclip
+            "abc".clip()
+            self.assertEqual("abc", pyperclip.paste())
+        except ModuleNotFoundError:
+            pass
+        except pyperclip.PyperclipException:
+            pass
 
 if __name__ == "__main__":
     unittest.main()

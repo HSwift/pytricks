@@ -186,5 +186,16 @@ if platform.python_implementation() == "CPython":
     forbiddenfruit.curse(dict, "to_json", _to_json)
     forbiddenfruit.curse(list, "to_json", _to_json)
 
+    try:
+        import pyperclip
+
+        pyperclip.paste()
+        def _copy_to_clip(x: str) -> None:
+            pyperclip.copy(x)
+        
+        forbiddenfruit.curse(str, "clip", _copy_to_clip)
+    except:
+        pass
+
 else:
     logging.error("Unsupported python variant.")
