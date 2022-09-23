@@ -112,5 +112,16 @@ class TestPytricks(unittest.TestCase):
         except pyperclip.PyperclipException:
             pass
 
+    def test_ascii(self):
+        self.assertEqual("abc".ascii(), [97, 98, 99])
+        self.assertEqual(b"\x81\x82\x83".ascii(), [129, 130, 131])
+
+    def test_ascii_fromat(self):
+        self.assertEqual("abc".ascii_format("%x", ","), "61,62,63")
+        self.assertEqual(b"\x81\x82\x83".ascii_format("%x", ","), "81,82,83")
+        self.assertEqual("abc".ascii_format(format="\\x%02x", sep=""), "\\x61\\x62\\x63")
+        self.assertEqual(b"\x81\x82\x83".ascii_format(format="\\%03o", sep=""), "\\201\\202\\203")
+
+
 if __name__ == "__main__":
     unittest.main()

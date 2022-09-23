@@ -6,19 +6,19 @@ import functools
 
 def toBytes(func):
     @functools.wraps(func)
-    def wrapper(x, *args):
+    def wrapper(x, *args, **kwargs):
         if type(x) == str:
             x = x.encode()
-        return func(x, *args)
+        return func(x, *args, **kwargs)
     return wrapper
 
 
 def toStr(func):
     @functools.wraps(func)
-    def wrapper(x, *args):
+    def wrapper(x, *args, **kwargs):
         if type(x) == bytes:
             x = x.decode()
-        return func(x, *args)
+        return func(x, *args, **kwargs)
     return wrapper
 
 
@@ -48,6 +48,20 @@ if platform.python_implementation() == "CPython":
 
     forbiddenfruit.curse(bytes, "bytes", _nop)
     forbiddenfruit.curse(str, "bytes", _bytes)
+
+    @toBytes
+    def _ascii(x: bytes) -> str:
+        return list(x)
+
+    forbiddenfruit.curse(bytes, "ascii", _ascii)
+    forbiddenfruit.curse(str, "ascii", _ascii)
+
+    @toBytes
+    def _ascii_format(x: bytes, format: str = "%x", sep: str = ",") -> str:
+        return sep.join(map(lambda x: format % x, list(x)))
+
+    forbiddenfruit.curse(bytes, "ascii_format", _ascii_format)
+    forbiddenfruit.curse(str, "ascii_format", _ascii_format)
 
     @toBytes
     def _hex(x: bytes) -> bytes:
@@ -190,9 +204,10 @@ if platform.python_implementation() == "CPython":
         import pyperclip
 
         pyperclip.paste()
+
         def _copy_to_clip(x: str) -> None:
             pyperclip.copy(x)
-        
+
         forbiddenfruit.curse(str, "clip", _copy_to_clip)
     except:
         pass

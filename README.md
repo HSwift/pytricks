@@ -30,6 +30,8 @@ Pytricks provides a number of handy extensions to python's built-in types. These
 | str,bytes | unbase64 | `"MTIz".unbase64() => b"123"` |
 | str,bytes | urlencode | `"#".urlencode() => "%23"` |
 | str,bytes | urldecode | `"%23".urldecode() => "#"` |
+| str,bytes | ascii | `"abc".ascii() => [97,98,99]` |
+| str,bytes | ascii_format | `"abc".ascii_format("\\x%02x","") => "\\x61\\x62\\x63"` |
 | str | findall | `"112233".findall("..") => ["11", "22", "33"]` |
 | str | match |  `"112233".match("1.") => True` |
 | str,bytes | md5 | `"123456".md5() => "e10adc3949ba59abbe56e057f20f883e"` |
