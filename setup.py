@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='pytricks',
-    version='0.1.3',
+    version='0.1.4',
     author='swift',
     author_email='qazswift@proton.me',
     url='https://github.com/HSwift/pytricks',
