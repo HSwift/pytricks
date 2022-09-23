@@ -2,7 +2,21 @@
 
 A series of python patches based on **forbiddenfruit** to improve the experience of REPL (or scripts)
 
-# docs
+## install
+
+```bash
+pip install -U git+https://github.com/HSwift/pytricks
+```
+
+## usage
+
+```python
+import pytricks
+
+"enjoy pytricks".hex()
+```
+
+## docs
 
 Pytricks provides a number of handy extensions to python's built-in types. These extensions are anti-pythonic, but can help you program comfortable.
 
@@ -33,26 +47,22 @@ Pytricks provides a number of handy extensions to python's built-in types. These
 | str,bytes | json | `"[1,2]".json() => [1,2]` |
 | dict,list | to_json | `[1,2].to_json() => "[1, 2]"` |
 
-# install
 
-```bash
-pip install -U git+https://github.com/HSwift/pytricks
-```
 
 note: pytricks only support **CPython**.
 
-# ipython integration
+## ipython integration
 
 ```bash
 echo "import pytricks" >> ~/.ipython/profile_default/startup/auto_import.py
 ```
 
-# requirements
+## requirements
 
 - CPython >= 3.3
 - forbiddenfruit
 
-# references
+## references
 
 https://github.com/zardus/fuckpy3
 
