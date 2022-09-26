@@ -33,6 +33,7 @@ if platform.python_implementation() == "CPython":
     import urllib.parse
     import struct
     import json
+    import html
 
     def _nop(x: any, *args) -> any:
         return x
@@ -217,6 +218,20 @@ if platform.python_implementation() == "CPython":
 
     except:
         pass
+
+    @toStr
+    def _htmlescape(x: str) -> str:
+        return html.escape(x)
+    
+    forbiddenfruit.curse(str, "htmlescape", _htmlescape)
+    forbiddenfruit.curse(bytes, "htmlescape", _htmlescape)
+
+    @toStr
+    def _htmlunescape(x: str) -> str:
+        return html.unescape(x)
+    
+    forbiddenfruit.curse(str, "htmlunescape", _htmlunescape)
+    forbiddenfruit.curse(bytes, "htmlunescape", _htmlunescape)
 
 else:
     logging.error("Unsupported python variant.")

@@ -132,6 +132,14 @@ class TestPytricks(unittest.TestCase):
         self.assertEqual("abc".ascii_format(format="\\x%02x", sep=""), "\\x61\\x62\\x63")
         self.assertEqual(b"\x81\x82\x83".ascii_format(format="\\%03o", sep=""), "\\201\\202\\203")
 
+    def test_html_escape(self):
+        self.assertEqual("""a <"'&> b""".htmlescape(),"a &lt;&quot;&#x27;&amp;&gt; b")
+        self.assertEqual(b"""a <"'&> b""".htmlescape(),"a &lt;&quot;&#x27;&amp;&gt; b")
+
+    def test_html_unescape(self):
+        self.assertEqual("""&#x61;&#32;&lt;&quot;&#x27;&amp;&gt;&#32;&#x62;""".htmlunescape(),"""a <"'&> b""")
+        self.assertEqual(b"""&#x61;&#32;&lt;&quot;&#x27;&amp;&gt;&#32;&#x62;""".htmlunescape(),"""a <"'&> b""")
+
 
 if __name__ == "__main__":
     unittest.main()
