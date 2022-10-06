@@ -1,3 +1,4 @@
+from base64 import encode
 import unittest
 import pytricks
 
@@ -6,9 +7,13 @@ class TestPytricks(unittest.TestCase):
 
     def test_bytes2str(self):
         self.assertEqual(b"123".str(), "123")
+        self.assertEqual(b"\xf0\x9f\x98\x80\xf0\x9f\x98\x83\xf0\x9f\x98\x84\xf0\x9f\x98\x81".str(), "😀😃😄😁")
+        self.assertEqual(b"\xd8=\xde\x00\xd8=\xde\x03\xd8=\xde\x04\xd8=\xde\x01".str("utf-16be"), "😀😃😄😁")
 
     def test_str2bytes(self):
         self.assertEqual("123".bytes(), b"123")
+        self.assertEqual("😀😃😄😁".bytes(), b"\xf0\x9f\x98\x80\xf0\x9f\x98\x83\xf0\x9f\x98\x84\xf0\x9f\x98\x81")
+        self.assertEqual("😀😃😄😁".bytes("utf-16be"), b"\xd8=\xde\x00\xd8=\xde\x03\xd8=\xde\x04\xd8=\xde\x01")
 
     def test_str2str(self):
         self.assertEqual("123".str(), "123")
@@ -19,10 +24,14 @@ class TestPytricks(unittest.TestCase):
     def test_hex(self):
         self.assertEqual("123".hex(), b"313233")
         self.assertEqual(b"123".hex(), b"313233")
+        self.assertEqual("😀😃😄😁".hex(), b"f09f9880f09f9883f09f9884f09f9881")
+        self.assertEqual("😀😃😄😁".hex(encoding="utf-16be"), b"d83dde00d83dde03d83dde04d83dde01")
 
     def test_unhex(self):
         self.assertEqual("313233".unhex(), b"123")
         self.assertEqual(b"313233".unhex(), b"123")
+        self.assertEqual(b"f09f9880f09f9883f09f9884f09f9881".unhex().str(), "😀😃😄😁")
+        self.assertEqual(b"d83dde00d83dde03d83dde04d83dde01".unhex().str("utf-16be"), "😀😃😄😁")
 
     def test_base64(self):
         self.assertEqual("123".base64(), b"MTIz")
@@ -133,13 +142,24 @@ class TestPytricks(unittest.TestCase):
         self.assertEqual(b"\x81\x82\x83".ascii_format(format="\\%03o", sep=""), "\\201\\202\\203")
 
     def test_html_escape(self):
-        self.assertEqual("""a <"'&> b""".htmlescape(),"a &lt;&quot;&#x27;&amp;&gt; b")
-        self.assertEqual(b"""a <"'&> b""".htmlescape(),"a &lt;&quot;&#x27;&amp;&gt; b")
+        self.assertEqual("""a <"'&> b""".htmlescape(), "a &lt;&quot;&#x27;&amp;&gt; b")
+        self.assertEqual(b"""a <"'&> b""".htmlescape(), "a &lt;&quot;&#x27;&amp;&gt; b")
 
     def test_html_unescape(self):
-        self.assertEqual("""&#x61;&#32;&lt;&quot;&#x27;&amp;&gt;&#32;&#x62;""".htmlunescape(),"""a <"'&> b""")
-        self.assertEqual(b"""&#x61;&#32;&lt;&quot;&#x27;&amp;&gt;&#32;&#x62;""".htmlunescape(),"""a <"'&> b""")
+        self.assertEqual("""&#x61;&#32;&lt;&quot;&#x27;&amp;&gt;&#32;&#x62;""".htmlunescape(), """a <"'&> b""")
+        self.assertEqual(b"""&#x61;&#32;&lt;&quot;&#x27;&amp;&gt;&#32;&#x62;""".htmlunescape(), """a <"'&> b""")
 
+    def test_unicode(self):
+        self.assertEqual("abc".unicode(), [97, 98, 99])
+        self.assertEqual("😀😃".unicode(), [128512, 128515])
+        self.assertEqual(b"\xf0\x9f\x98\x80\xf0\x9f\x98\x83".unicode(), [128512, 128515])
+        self.assertEqual(b"\xd8=\xde\x00\xd8=\xde\x03".unicode(encoding="utf-16be"), [128512, 128515])
+
+    def test_unicode_format(self):
+        self.assertEqual("abc".unicode_format("%x", ","), "61,62,63")
+        self.assertEqual("😀😃".unicode_format("\\U%x", ""), "\\U1f600\\U1f603")
+        self.assertEqual(b"\xf0\x9f\x98\x80\xf0\x9f\x98\x83".unicode_format("\\U%x", ""), "\\U1f600\\U1f603")
+        self.assertEqual(b"\xd8=\xde\x00\xd8=\xde\x03".unicode_format("\\U%x", "",encoding="utf-16be"), "\\U1f600\\U1f603")
 
 if __name__ == "__main__":
     unittest.main()

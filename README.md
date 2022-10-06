@@ -34,6 +34,8 @@ Pytricks provides a number of handy extensions to python's built-in types. These
 | str,bytes | htmlunescape | `"&lt;&#x27;&amp;&gt;".htmlunescape() => "<'&>"` |
 | str,bytes | ascii | `"abc".ascii() => [97,98,99]` |
 | str,bytes | ascii_format | `"abc".ascii_format("\\x%02x","") => "\\x61\\x62\\x63"` |
+| str,bytes | unicode | `"😀😃".unicode() => [128512, 128515]` |
+| str,bytes | unicode_format | `"😀😃".unicode_format("\\U%x", "") => "\\U1f600\\U1f603"` |
 | str | findall | `"112233".findall("..") => ["11", "22", "33"]` |
 | str | match |  `"112233".match("1.") => True` |
 | str,bytes | md5 | `"123456".md5() => "e10adc3949ba59abbe56e057f20f883e"` |

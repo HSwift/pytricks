@@ -8,7 +8,11 @@ def toBytes(func):
     @functools.wraps(func)
     def wrapper(x, *args, **kwargs):
         if type(x) == str:
-            x = x.encode()
+            if 'encoding' in kwargs:
+                x = x.encode(encoding = kwargs['encoding'])
+                del kwargs['encoding']
+            else:
+                x = x.encode()
         return func(x, *args, **kwargs)
     return wrapper
 
@@ -17,7 +21,11 @@ def toStr(func):
     @functools.wraps(func)
     def wrapper(x, *args, **kwargs):
         if type(x) == bytes:
-            x = x.decode()
+            if 'encoding' in kwargs:
+                x = x.decode(encoding = kwargs['encoding'])
+                del kwargs['encoding']
+            else:
+                x = x.decode()
         return func(x, *args, **kwargs)
     return wrapper
 
@@ -51,7 +59,7 @@ if platform.python_implementation() == "CPython":
     forbiddenfruit.curse(str, "bytes", _bytes)
 
     @toBytes
-    def _ascii(x: bytes) -> str:
+    def _ascii(x: bytes) -> list:
         return list(x)
 
     forbiddenfruit.curse(bytes, "ascii", _ascii)
@@ -63,6 +71,20 @@ if platform.python_implementation() == "CPython":
 
     forbiddenfruit.curse(bytes, "ascii_format", _ascii_format)
     forbiddenfruit.curse(str, "ascii_format", _ascii_format)
+
+    @toStr
+    def _unicode(x: str) -> list:
+        return list(map(ord,x))
+
+    forbiddenfruit.curse(bytes, "unicode", _unicode)
+    forbiddenfruit.curse(str, "unicode", _unicode)
+
+    @toStr
+    def _unicode_format(x: str, format: str = "%x", sep: str = ",") -> str:
+        return sep.join(map(lambda x: format % x, list(map(ord,x))))
+
+    forbiddenfruit.curse(bytes, "unicode_format", _unicode_format)
+    forbiddenfruit.curse(str, "unicode_format", _unicode_format)
 
     @toBytes
     def _hex(x: bytes) -> bytes:
