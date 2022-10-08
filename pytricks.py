@@ -1,4 +1,5 @@
 from ast import Num
+from operator import xor
 import platform
 import logging
 import functools
@@ -9,7 +10,7 @@ def toBytes(func):
     def wrapper(x, *args, **kwargs):
         if type(x) == str:
             if 'encoding' in kwargs:
-                x = x.encode(encoding = kwargs['encoding'])
+                x = x.encode(encoding=kwargs['encoding'])
                 del kwargs['encoding']
             else:
                 x = x.encode()
@@ -22,7 +23,7 @@ def toStr(func):
     def wrapper(x, *args, **kwargs):
         if type(x) == bytes:
             if 'encoding' in kwargs:
-                x = x.decode(encoding = kwargs['encoding'])
+                x = x.decode(encoding=kwargs['encoding'])
                 del kwargs['encoding']
             else:
                 x = x.decode()
@@ -74,14 +75,14 @@ if platform.python_implementation() == "CPython":
 
     @toStr
     def _unicode(x: str) -> list:
-        return list(map(ord,x))
+        return list(map(ord, x))
 
     forbiddenfruit.curse(bytes, "unicode", _unicode)
     forbiddenfruit.curse(str, "unicode", _unicode)
 
     @toStr
     def _unicode_format(x: str, format: str = "%x", sep: str = ",") -> str:
-        return sep.join(map(lambda x: format % x, list(map(ord,x))))
+        return sep.join(map(lambda x: format % x, list(map(ord, x))))
 
     forbiddenfruit.curse(bytes, "unicode_format", _unicode_format)
     forbiddenfruit.curse(str, "unicode_format", _unicode_format)
@@ -244,16 +245,75 @@ if platform.python_implementation() == "CPython":
     @toStr
     def _htmlescape(x: str) -> str:
         return html.escape(x)
-    
+
     forbiddenfruit.curse(str, "htmlescape", _htmlescape)
     forbiddenfruit.curse(bytes, "htmlescape", _htmlescape)
 
     @toStr
     def _htmlunescape(x: str) -> str:
         return html.unescape(x)
-    
+
     forbiddenfruit.curse(str, "htmlunescape", _htmlunescape)
     forbiddenfruit.curse(bytes, "htmlunescape", _htmlunescape)
+
+    @toStr
+    def _unicode_escape(x: str) -> str:
+        # json.encoder.py_encode_basestring_ascii
+        def encoder(s):
+            n = ord(s)
+            if n < 0x10000:
+                return '\\u{0:04x}'.format(n)
+                # return '\\u%04x' % (n,)
+            else:
+                # surrogate pair
+                n -= 0x10000
+                s1 = 0xd800 | ((n >> 10) & 0x3ff)
+                s2 = 0xdc00 | (n & 0x3ff)
+                return '\\u{0:04x}\\u{1:04x}'.format(s1, s2)
+
+        return ''.join(map(encoder, x))
+
+    forbiddenfruit.curse(str, "unicode_escape", _unicode_escape)
+    forbiddenfruit.curse(bytes, "unicode_escape", _unicode_escape)
+
+    @toStr
+    def _unicode_unescape(x: str) -> str:
+        # json.decoder.py_scanstring
+        BACKSLASH = {
+            '\\': '\\', '/': '/', 'b': '\b', 'f': '\f', 'n': '\n', 'r': '\r', 't': '\t',
+        }
+
+        def _decode_uXXXX(s, pos):
+            esc = s[pos + 1:pos + 5]
+            return int(esc, 16)
+
+        def decoder(x):
+            l = len(x)
+            i = 0
+            chars = []
+            while i < l:
+                if x[i] == "\\":
+                    i += 1
+                    if x[i] in BACKSLASH:
+                        chars.append(BACKSLASH[x[i]])
+                        i += 1
+                    elif x[i] == "u":
+                        uni = _decode_uXXXX(x, i)
+                        i += 5
+                        if 0xd800 <= uni <= 0xdbff and x[i:i + 2] == '\\u':
+                            uni2 = _decode_uXXXX(x, i + 1)
+                            if 0xdc00 <= uni2 <= 0xdfff:
+                                uni = 0x10000 + (((uni - 0xd800) << 10) | (uni2 - 0xdc00))
+                                i += 6
+                        chars.append(chr(uni))
+                else:
+                    chars.append(x[i])
+                    i += 1
+            return ''.join(chars)
+        return decoder(x)
+
+    forbiddenfruit.curse(str, "unicode_unescape", _unicode_unescape)
+    forbiddenfruit.curse(bytes, "unicode_unescape", _unicode_unescape)
 
 else:
     logging.error("Unsupported python variant.")

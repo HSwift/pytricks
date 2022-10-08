@@ -159,7 +159,16 @@ class TestPytricks(unittest.TestCase):
         self.assertEqual("abc".unicode_format("%x", ","), "61,62,63")
         self.assertEqual("😀😃".unicode_format("\\U%x", ""), "\\U1f600\\U1f603")
         self.assertEqual(b"\xf0\x9f\x98\x80\xf0\x9f\x98\x83".unicode_format("\\U%x", ""), "\\U1f600\\U1f603")
-        self.assertEqual(b"\xd8=\xde\x00\xd8=\xde\x03".unicode_format("\\U%x", "",encoding="utf-16be"), "\\U1f600\\U1f603")
+        self.assertEqual(b"\xd8=\xde\x00\xd8=\xde\x03".unicode_format("\\U%x", "", encoding="utf-16be"), "\\U1f600\\U1f603")
+
+    def test_unicode_escape(self):
+        self.assertEqual("aA你我😀😃\n\t".unicode_escape(), "\\u0061\\u0041\\u4f60\\u6211\\ud83d\\ude00\\ud83d\\ude03\\u000a\\u0009")
+        self.assertEqual(b"\xf0\x9f\x98\x80\xf0\x9f\x98\x83".unicode_escape(), "\\ud83d\\ude00\\ud83d\\ude03")
+
+    def test_unicode_unescape(self):
+        self.assertEqual("\\u0061\\u0041\\u4f60\\u6211\\ud83d\\ude00\\ud83d\\ude03\\u000a\\u0009".unicode_unescape(), "aA你我😀😃\n\t")
+        self.assertEqual("\\ud83d\\ude00\\ud83d \\\\ude03你".unicode_unescape(), "😀\ud83d \\ude03你")
+
 
 if __name__ == "__main__":
     unittest.main()
